@@ -1,0 +1,11 @@
+server:
+  port: 9050
+
+spring:
+  security:
+
+    # SpringConfig 에서 유저 설정할 경우 application.yml 에 있는 유저정보는 적용 X
+    user:
+      name: kim
+      password: 1234
+      roles: USER

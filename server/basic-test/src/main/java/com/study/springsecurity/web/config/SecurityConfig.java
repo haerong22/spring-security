@@ -46,13 +46,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+//        http
+//                .authorizeRequests()
+//                .antMatchers("/").permitAll()
+//                .anyRequest().authenticated()
+//                .and()
+//                .formLogin()
+//                .and()
+//                .httpBasic();
+
         http
-                .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .anyRequest().authenticated()
+                .headers().disable()
+                .csrf().disable()
+                .authorizeRequests().anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .and()
-                .httpBasic();
+                .defaultSuccessUrl("/", false)  // false 옵션은 로그인 성공시 루트 페이지로 가는 것을 방지
+                .failureForwardUrl("/"); // 로그인 실패시 이동 페이지
     }
 }

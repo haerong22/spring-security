@@ -38,3 +38,6 @@ rootProject.name = 'spring-security'
         project(projectName).projectDir = subDir
     }
 }
+include 'server:login-basic'
+findProject(':server:login-basic')?.name = 'login-basic'
+

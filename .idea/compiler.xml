@@ -8,15 +8,21 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.16/6dc192c7f93ec1853f70d59d8a6dcf94eb42866/lombok-1.18.16.jar" />
         </processorPath>
-        <module name="spring-security.server.login-basic.test" />
+        <module name="spring-security.server-src.main" />
+        <module name="spring-security.server.login-custom-filter.main" />
         <module name="spring-security.server-login-basic.test" />
+        <module name="spring-security.server-login-custom-filter.test" />
         <module name="spring-security.server.login-basic.main" />
         <module name="spring-security.server.main" />
-        <module name="spring-security.comp-common-utils.test" />
         <module name="spring-security.server-login-basic.main" />
         <module name="spring-security.server-basic-test.test" />
         <module name="spring-security.server.test" />
         <module name="spring-security.server-basic-test.main" />
+        <module name="spring-security.server.login-basic.test" />
+        <module name="spring-security.server-login-custom-filter.main" />
+        <module name="spring-security.server.login-custom-filter.test" />
+        <module name="spring-security.comp-common-utils.test" />
+        <module name="spring-security.server-src.test" />
         <module name="spring-security.comp-common-utils.main" />
       </profile>
     </annotationProcessing>

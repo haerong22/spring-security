@@ -16,13 +16,17 @@
         <module name="spring-security.server.main" />
         <module name="spring-security.server-login-basic.main" />
         <module name="spring-security.server-basic-test.test" />
+        <module name="spring-security.server-basic-authentication-test.main" />
         <module name="spring-security.server.test" />
         <module name="spring-security.server-basic-test.main" />
+        <module name="spring-security.server-basic-authentication-test.test" />
         <module name="spring-security.server.login-basic.test" />
         <module name="spring-security.server-login-custom-filter.main" />
+        <module name="spring-security.server.basic-authentication-test.test" />
         <module name="spring-security.server.login-custom-filter.test" />
         <module name="spring-security.comp-common-utils.test" />
         <module name="spring-security.server-src.test" />
+        <module name="spring-security.server.basic-authentication-test.main" />
         <module name="spring-security.comp-common-utils.main" />
       </profile>
     </annotationProcessing>

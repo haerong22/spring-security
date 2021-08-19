@@ -42,4 +42,6 @@ include 'server:login-basic'
 findProject(':server:login-basic')?.name = 'login-basic'
 include 'server:login-custom-filter'
 findProject(':server:login-custom-filter')?.name = 'login-custom-filter'
+include 'server:basic-authentication-test'
+findProject(':server:basic-authentication-test')?.name = 'basic-authentication-test'
 

@@ -7,3 +7,13 @@
 
 - Remember Me
   - RememberMeAuthenticationFilter
+  
+
+- Anonymous User
+  - AnonymousAuthenticationFilter
+
+
+- Session Management
+  - concurrentSession
+  - sessionFixation
+  - sessionCreationPolicy

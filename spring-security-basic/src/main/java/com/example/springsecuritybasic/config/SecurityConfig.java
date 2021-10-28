@@ -1,6 +1,7 @@
 package com.example.springsecuritybasic.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -20,10 +21,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+
+        // 메모리에 유저 생성 (테스트 용도)
+        auth.inMemoryAuthentication().withUser("user").password("{noop}1234").roles("USER");
+        auth.inMemoryAuthentication().withUser("sys").password("{noop}1234").roles("SYS", "USER");
+        auth.inMemoryAuthentication().withUser("admin").password("{noop}1234").roles("ADMIN", "SYS", "USER");
+    }
+
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        // 권한 설정
+        // 구체적인 경로가 먼저 오고 큰 범위의 경로가 뒤에 오도록 해야한다.
         http
-                .authorizeRequests()
-                .anyRequest().authenticated();
+                .authorizeRequests()  // 권한 검사 필요
+                .antMatchers("/login", "/loginPage").permitAll()  // 해당 경로는 무조건 접근 허용
+                .antMatchers("/user").hasRole("USER")  // 해당 경로는 USER 권한이 필요
+                .antMatchers("/admin/pay").access("hasRole('ADMIN')") // 해당 경로는 ADMIN 권한이 필요
+                .antMatchers("/admin/**").access("hasRole('ADMIN') or hasRole('SYS')") // 해당 경로는 ADMIN 또는 SYS 권한 필요
+                .anyRequest().authenticated() // 모든 요청에 대해 인증 필요
+        ;
 
         // 폼 로그인
         http
@@ -94,6 +112,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .sessionCreationPolicy(SessionCreationPolicy.NEVER)        // 스프링 시큐리티가 생성하진 않지만 이미 존재하면 사용
 //                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)    // 스프링 시큐리티가 생성하지도 않고 존재해도 사용X
                 ;
-
     }
 }

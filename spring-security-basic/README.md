@@ -17,3 +17,6 @@
   - concurrentSession
   - sessionFixation
   - sessionCreationPolicy
+  
+
+- Authorization

@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 
 import javax.servlet.http.HttpSession;
 
@@ -54,7 +56,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/login_proc")  // 로그인 수행 url
                 .successHandler((request, response, authentication) -> {  // 로그인 성공 후 처리
                     System.out.println("authentication = " + authentication.getName());
-                    response.sendRedirect("/");
+                    HttpSessionRequestCache requestCache = new HttpSessionRequestCache();
+                    SavedRequest savedRequest = requestCache.getRequest(request, response);  // 원래 접근하려고 했던 정보가 저장된 캐시
+                    String redirectUrl = savedRequest.getRedirectUrl();
+                    response.sendRedirect(redirectUrl);
                 })
                 .failureHandler((request, response, exception) -> {  // 로그인 실패 후 처리
                     System.out.println("exception = " + exception.getMessage());
@@ -112,5 +117,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .sessionCreationPolicy(SessionCreationPolicy.NEVER)        // 스프링 시큐리티가 생성하진 않지만 이미 존재하면 사용
 //                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)    // 스프링 시큐리티가 생성하지도 않고 존재해도 사용X
                 ;
+
+        // 예외 처리
+        http
+                .exceptionHandling()
+//                .authenticationEntryPoint((request, response, authException) -> {  // 인증 실패 시
+//                    response.sendRedirect("/login");
+//                })
+                .accessDeniedHandler((request, response, accessDeniedException) -> {  // 권한 없을 시
+                    response.sendRedirect("/denied");
+                });
     }
 }

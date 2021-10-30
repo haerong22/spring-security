@@ -20,3 +20,12 @@
   
 
 - Authorization
+
+
+- Exception Handling
+  - ExceptionTranslationFilter
+    - FilterSecurityInterceptor
+    - AccessDeniedHandler
+    - AuthenticationEntryPoint 
+
+

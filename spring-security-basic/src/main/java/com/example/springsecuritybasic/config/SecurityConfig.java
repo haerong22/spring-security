@@ -1,6 +1,7 @@
 package com.example.springsecuritybasic.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 @Configuration
 @EnableWebSecurity
+@Order(1)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
@@ -127,5 +129,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler((request, response, accessDeniedException) -> {  // 권한 없을 시
                     response.sendRedirect("/denied");
                 });
+    }
+}
+
+// 다중 설정
+// antMatcher 를 통해 어떤 설정을 사용할 지 결정
+// @Order 로 순서를 정해야 한다.
+@EnableWebSecurity
+@Order(0)
+class SecurityConfig2 extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .antMatcher("/test/**")
+                .authorizeRequests()
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic();
     }
 }

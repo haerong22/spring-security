@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
@@ -35,6 +36,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        /**
+         * SecurityContext 저장 방식
+         *
+         * MODE_THREADLOCAL : 쓰레드당 SecurityContext 객체를 할당(기본값)
+         * MODE_INHERITABLETHREADLOCAL : 메인 쓰레드와 자식 쓰레드가 같은 SecurityContext 유지
+         * MODE_GLOBAL : 프로그램에서 하나의 SecurityContext 를 저장
+         */
+        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
 
         // 권한 설정
         // 구체적인 경로가 먼저 오고 큰 범위의 경로가 뒤에 오도록 해야한다.

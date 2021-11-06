@@ -47,12 +47,25 @@
 
 
 - Authentication
-  - Authentication
-    - Principal
-    - Credentials
-    - Authorities
-    - Details
-    - Authenticated
   - SecurityContextHolder
-  - SecurityContext
+    - SecurityContext
+      - Authentication
+        - Principal
+        - Credentials
+        - Authorities
+        - Details
+        - Authenticated
+    - SecurityContextPersistenceFilter
+  - AuthenticationManager
+  - AuthenticationProvider
   
+
+- Authorization
+  - FilterSecurityInterceptor
+    - SecurityMetadataSource
+    - AccessDecisionManager
+      - AffirmativeBased
+      - ConsensusBased
+      - UnanimousBased
+    - AccessDecisionVoter
+      

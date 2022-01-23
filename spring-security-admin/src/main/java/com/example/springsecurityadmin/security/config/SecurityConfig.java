@@ -1,7 +1,9 @@
 package com.example.springsecurityadmin.security.config;
 
-import com.example.springsecurityadmin.security.filter.AjaxLoginProcessingFilter;
-import com.example.springsecurityadmin.security.handler.CustomAccessDeniedHandler;
+import com.example.springsecurityadmin.security.handler.FormAccessDeniedHandler;
+import com.example.springsecurityadmin.security.handler.FormAuthenticationFailureHandler;
+import com.example.springsecurityadmin.security.handler.FormAuthenticationSuccessHandler;
+import com.example.springsecurityadmin.security.provider.FormAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -17,9 +19,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Order(1)
 @Configuration
@@ -28,10 +27,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
-    private final AuthenticationProvider formAuthenticationProvider;
+    private final FormAuthenticationProvider formAuthenticationProvider;
     private final AuthenticationDetailsSource authenticationDetailsSource;
-    private final AuthenticationSuccessHandler authenticationSuccessHandler;
-    private final AuthenticationFailureHandler authenticationFailureHandler;
+    private final FormAuthenticationSuccessHandler formAuthenticationSuccessHandler;
+    private final FormAuthenticationFailureHandler formAuthenticationFailureHandler;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -66,8 +65,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/login_proc")
                 .authenticationDetailsSource(authenticationDetailsSource)
                 .defaultSuccessUrl("/")
-                .successHandler(authenticationSuccessHandler)
-                .failureHandler(authenticationFailureHandler)
+                .successHandler(formAuthenticationSuccessHandler)
+                .failureHandler(formAuthenticationFailureHandler)
                 .permitAll()
         ;
         http
@@ -78,9 +77,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AccessDeniedHandler accessDeniedHandler() {
-        CustomAccessDeniedHandler customAccessDeniedHandler = new CustomAccessDeniedHandler();
-        customAccessDeniedHandler.setErrorPage("/denied");
-        return  customAccessDeniedHandler;
+        FormAccessDeniedHandler formAccessDeniedHandler = new FormAccessDeniedHandler();
+        formAccessDeniedHandler.setErrorPage("/denied");
+        return formAccessDeniedHandler;
     }
 
     @Override

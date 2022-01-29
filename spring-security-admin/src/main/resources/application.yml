@@ -1,4 +1,4 @@
-spring:
+ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/springboot
     username: postgres

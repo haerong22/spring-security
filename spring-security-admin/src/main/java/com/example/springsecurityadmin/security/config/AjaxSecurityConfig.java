@@ -1,6 +1,8 @@
 package com.example.springsecurityadmin.security.config;
 
+import com.example.springsecurityadmin.security.common.AjaxLoginAuthenticationEntryPoint;
 import com.example.springsecurityadmin.security.filter.AjaxLoginProcessingFilter;
+import com.example.springsecurityadmin.security.handler.AjaxAccessDeniedHandler;
 import com.example.springsecurityadmin.security.handler.AjaxAuthenticationFailureHandler;
 import com.example.springsecurityadmin.security.handler.AjaxAuthenticationSuccessHandler;
 import com.example.springsecurityadmin.security.provider.AjaxAuthenticationProvider;
@@ -38,10 +40,15 @@ public class AjaxSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .antMatcher("/api/**")
                 .authorizeRequests()
+                .antMatchers("/api/messages").hasRole("MANAGER")
                 .anyRequest().authenticated()
         .and()
-                .addFilterBefore(ajaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class)
-        ;
+                .addFilterBefore(ajaxLoginProcessingFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        http
+                .exceptionHandling()
+                .authenticationEntryPoint(new AjaxLoginAuthenticationEntryPoint())
+                .accessDeniedHandler(new AjaxAccessDeniedHandler());
     }
 
     @Bean

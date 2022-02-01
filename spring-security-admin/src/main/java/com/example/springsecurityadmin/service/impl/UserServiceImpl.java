@@ -1,6 +1,6 @@
 package com.example.springsecurityadmin.service.impl;
 
-import com.example.springsecurityadmin.domain.Account;
+import com.example.springsecurityadmin.domain.entity.Account;
 import com.example.springsecurityadmin.repository.UserRepository;
 import com.example.springsecurityadmin.service.UserService;
 import lombok.RequiredArgsConstructor;

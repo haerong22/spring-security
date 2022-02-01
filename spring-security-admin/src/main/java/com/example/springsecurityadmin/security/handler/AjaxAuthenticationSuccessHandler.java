@@ -1,6 +1,6 @@
 package com.example.springsecurityadmin.security.handler;
 
-import com.example.springsecurityadmin.domain.Account;
+import com.example.springsecurityadmin.domain.entity.Account;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

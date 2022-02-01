@@ -1,6 +1,6 @@
 package com.example.springsecurityadmin.service;
 
-import com.example.springsecurityadmin.domain.Account;
+import com.example.springsecurityadmin.domain.entity.Account;
 
 public interface UserService {
 

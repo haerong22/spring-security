@@ -1,6 +1,6 @@
 package com.example.springsecurityadmin.controller.user;
 
-import com.example.springsecurityadmin.domain.Account;
+import com.example.springsecurityadmin.domain.entity.Account;
 import com.example.springsecurityadmin.domain.AccountDto;
 import com.example.springsecurityadmin.service.UserService;
 import lombok.RequiredArgsConstructor;

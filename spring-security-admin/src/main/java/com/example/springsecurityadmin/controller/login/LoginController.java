@@ -1,6 +1,6 @@
 package com.example.springsecurityadmin.controller.login;
 
-import com.example.springsecurityadmin.domain.Account;
+import com.example.springsecurityadmin.domain.entity.Account;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;

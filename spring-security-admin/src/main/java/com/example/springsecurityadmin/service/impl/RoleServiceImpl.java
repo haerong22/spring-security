@@ -21,4 +21,9 @@ public class RoleServiceImpl implements RoleService {
 
         return roleRepository.findAll();
     }
+
+    @Transactional
+    public Role getRole(long id) {
+        return roleRepository.findById(id).orElse(new Role());
+    }
 }

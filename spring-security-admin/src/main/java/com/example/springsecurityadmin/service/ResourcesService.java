@@ -7,4 +7,5 @@ import java.util.List;
 public interface ResourcesService {
 
     List<Resources> getResources();
+    Resources getResources(long id);
 }

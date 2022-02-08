@@ -8,4 +8,5 @@ public interface ResourcesService {
 
     List<Resources> getResources();
     Resources getResources(long id);
+    void createResources(Resources resources);
 }

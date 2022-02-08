@@ -26,4 +26,10 @@ public class ResourcesServiceImpl implements ResourcesService {
     public List<Resources> getResources() {
         return resourcesRepository.findAll(Sort.by(Sort.Order.asc("orderNum")));
     }
+
+    @Override
+    @Transactional
+    public void createResources(Resources resources){
+        resourcesRepository.save(resources);
+    }
 }

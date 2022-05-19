@@ -10,4 +10,6 @@ public interface UserService {
     AccountDto getUser(Long id);
     List<Account> getUsers();
     void createUser(Account account);
+
+    void modifyUser(AccountDto accountDto);
 }

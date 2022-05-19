@@ -44,11 +44,26 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     }
 
     private void setupSecurityResources() {
-        Set<Role> roles = new HashSet<>();
         Role adminRole = createRoleIfNotFound("ROLE_ADMIN", "관리자");
-        roles.add(adminRole);
-        createResourceIfNotFound("/admin/**", "", roles, "url");
-        createUserIfNotFound("admin", "admin@admin.com", "pass", roles);
+        Role managerRole = createRoleIfNotFound("ROLE_MANAGER", "매니저");
+        Role userRole = createRoleIfNotFound("ROLE_USER", "유저");
+        Set<Role> user = new HashSet<>();
+        user.add(userRole);
+        createUserIfNotFound("user", "user@user.com", "1234", user);
+        createResourceIfNotFound("/mypage", "", user, "url");
+
+        Set<Role> manager = new HashSet<>();
+        manager.add(userRole);
+        manager.add(managerRole);
+        createUserIfNotFound("manager", "manager@manager.com", "1234", manager);
+        createResourceIfNotFound("/messages", "", manager, "url");
+
+        Set<Role> admin = new HashSet<>();
+        admin.add(userRole);
+        admin.add(managerRole);
+        admin.add(adminRole);
+        createUserIfNotFound("admin", "admin@admin.com", "1234", admin);
+        createResourceIfNotFound("/admin/**", "", admin, "url");
     }
 
     @Transactional

@@ -9,11 +9,13 @@ import com.example.springsecurityadmin.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -27,8 +29,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private final RoleRepository roleRepository;
     private final ResourcesRepository resourcesRepository;
     private final PasswordEncoder passwordEncoder;
-
-    private static final AtomicInteger count = new AtomicInteger(0);
 
     @Override
     @Transactional
@@ -44,26 +44,28 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     }
 
     private void setupSecurityResources() {
-        Role adminRole = createRoleIfNotFound("ROLE_ADMIN", "관리자");
-        Role managerRole = createRoleIfNotFound("ROLE_MANAGER", "매니저");
         Role userRole = createRoleIfNotFound("ROLE_USER", "유저");
-        Set<Role> user = new HashSet<>();
-        user.add(userRole);
-        createUserIfNotFound("user", "user@user.com", "1234", user);
-        createResourceIfNotFound("/mypage", "", user, "url");
-
-        Set<Role> manager = new HashSet<>();
-        manager.add(userRole);
-        manager.add(managerRole);
-        createUserIfNotFound("manager", "manager@manager.com", "1234", manager);
-        createResourceIfNotFound("/messages", "", manager, "url");
+        Role managerRole = createRoleIfNotFound("ROLE_MANAGER", "매니저");
+        Role adminRole = createRoleIfNotFound("ROLE_ADMIN", "관리자");
 
         Set<Role> admin = new HashSet<>();
-        admin.add(userRole);
-        admin.add(managerRole);
         admin.add(adminRole);
+
+        Set<Role> user = new HashSet<>();
+        user.add(userRole);
+
+        Set<Role> manager = new HashSet<>();
+        manager.add(managerRole);
+
+        createUserIfNotFound("user", "user@user.com", "1234", user);
         createUserIfNotFound("admin", "admin@admin.com", "1234", admin);
-        createResourceIfNotFound("/admin/**", "", admin, "url");
+        createUserIfNotFound("manager", "manager@manager.com", "1234", manager);
+
+        createResourceIfNotFound("/admin/**", "", admin, "url", 1);
+        createResourceIfNotFound("/mypage", "", user, "url", 2);
+        createResourceIfNotFound("/messages", "", manager, "url", 3);
+        createResourceIfNotFound("/config", "", manager, "url", 4);
+
     }
 
     @Transactional
@@ -95,7 +97,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     }
 
     @Transactional
-    public Resources createResourceIfNotFound(String resourceName, String httpMethod, Set<Role> roleSet, String resourceType) {
+    public Resources createResourceIfNotFound(String resourceName, String httpMethod, Set<Role> roleSet, String resourceType, int orderNum) {
         Resources resources = resourcesRepository.findByResourceNameAndHttpMethod(resourceName, httpMethod);
 
         if (resources == null) {
@@ -104,7 +106,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
                     .roleSet(roleSet)
                     .httpMethod(httpMethod)
                     .resourceType(resourceType)
-                    .orderNum(count.incrementAndGet())
+                    .orderNum(orderNum)
                     .build();
         }
         return resourcesRepository.save(resources);

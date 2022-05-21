@@ -32,4 +32,10 @@ public class ResourcesServiceImpl implements ResourcesService {
     public void createResources(Resources resources){
         resourcesRepository.save(resources);
     }
+
+    @Override
+    @Transactional
+    public void deleteResources(long id) {
+        resourcesRepository.deleteById(id);
+    }
 }

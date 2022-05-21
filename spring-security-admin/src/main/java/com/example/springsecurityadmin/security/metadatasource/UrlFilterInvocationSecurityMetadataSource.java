@@ -1,11 +1,10 @@
 package com.example.springsecurityadmin.security.metadatasource;
 
 import com.example.springsecurityadmin.security.factory.UrlResourcesMapFactoryBean;
+import com.example.springsecurityadmin.service.SecurityResourceService;
 import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +16,11 @@ public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocati
 
     private final LinkedHashMap<RequestMatcher, List<ConfigAttribute>> requestMap;
 
-    public UrlFilterInvocationSecurityMetadataSource(UrlResourcesMapFactoryBean urlResourcesMapFactoryBean) throws Exception {
-        requestMap = urlResourcesMapFactoryBean.getObject();
+    private final SecurityResourceService securityResourceService;
+
+    public UrlFilterInvocationSecurityMetadataSource(UrlResourcesMapFactoryBean urlResourcesMapFactoryBean, SecurityResourceService securityResourceService) throws Exception {
+        this.requestMap = urlResourcesMapFactoryBean.getObject();
+        this.securityResourceService = securityResourceService;
     }
 
     @Override
@@ -46,5 +48,18 @@ public class UrlFilterInvocationSecurityMetadataSource implements FilterInvocati
     @Override
     public boolean supports(Class<?> clazz) {
         return FilterInvocation.class.isAssignableFrom(clazz);
+    }
+
+    public void reload() {
+        LinkedHashMap<RequestMatcher, List<ConfigAttribute>> reloadedMap = securityResourceService.getResourceList();
+        Iterator<Map.Entry<RequestMatcher, List<ConfigAttribute>>> iterator = reloadedMap.entrySet().iterator();
+
+        this.requestMap.clear();
+
+        while (iterator.hasNext()) {
+            Map.Entry<RequestMatcher, List<ConfigAttribute>> entry = iterator.next();
+            this.requestMap.put(entry.getKey(), entry.getValue());
+        }
+
     }
 }

@@ -4,6 +4,7 @@ import com.example.springsecurityadmin.domain.dto.ResourcesDto;
 import com.example.springsecurityadmin.domain.entity.Resources;
 import com.example.springsecurityadmin.domain.entity.Role;
 import com.example.springsecurityadmin.repository.RoleRepository;
+import com.example.springsecurityadmin.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
 import com.example.springsecurityadmin.service.ResourcesService;
 import com.example.springsecurityadmin.service.RoleService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class ResourcesController {
     private final ResourcesService resourcesService;
     private final RoleService roleService;
     private final RoleRepository roleRepository;
+    private final UrlFilterInvocationSecurityMetadataSource filterInvocationSecurityMetadataSource;
 
     @GetMapping(value="/admin/resources")
     public String getResources(Model model) throws Exception {
@@ -75,6 +77,17 @@ public class ResourcesController {
         resources.setRoleSet(roles);
 
         resourcesService.createResources(resources);
+        filterInvocationSecurityMetadataSource.reload();
+
+        return "redirect:/admin/resources";
+    }
+
+    @GetMapping(value="/admin/resources/delete/{id}")
+    public String removeResources(@PathVariable String id, Model model) throws Exception {
+
+        Resources resources = resourcesService.getResources(Long.parseLong(id));
+        resourcesService.deleteResources(Long.parseLong(id));
+        filterInvocationSecurityMetadataSource.reload();
 
         return "redirect:/admin/resources";
     }

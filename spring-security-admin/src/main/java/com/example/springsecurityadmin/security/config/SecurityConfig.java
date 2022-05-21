@@ -1,5 +1,6 @@
 package com.example.springsecurityadmin.security.config;
 
+import com.example.springsecurityadmin.security.filter.PermitAllFilter;
 import com.example.springsecurityadmin.security.handler.FormAccessDeniedHandler;
 import com.example.springsecurityadmin.security.handler.FormAuthenticationFailureHandler;
 import com.example.springsecurityadmin.security.handler.FormAuthenticationSuccessHandler;
@@ -42,6 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final FormAuthenticationFailureHandler formAuthenticationFailureHandler;
     private final UrlFilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource;
 
+    private final String[] permitAllResources = {"/", "/users", "user/login/**", "/login*"};
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
@@ -64,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/users", "user/login/**", "/login*").permitAll()
+//                .antMatchers("/", "/users", "user/login/**", "/login*").permitAll()
 //                .antMatchers("/mypage").hasRole("USER")
 //                .antMatchers("/messages").hasRole("MANAGER")
 //                .antMatchers("/config").hasRole("ADMIN")
@@ -101,13 +104,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public FilterSecurityInterceptor customFilterSecurityInterceptor() throws Exception {
-        FilterSecurityInterceptor filterSecurityInterceptor = new FilterSecurityInterceptor();
-        filterSecurityInterceptor.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource);
-        filterSecurityInterceptor.setAccessDecisionManager(affirmativeBased());
-        filterSecurityInterceptor.setAuthenticationManager(authenticationManagerBean());
+    public PermitAllFilter customFilterSecurityInterceptor() throws Exception {
+        PermitAllFilter permitAllFilter = new PermitAllFilter(permitAllResources);
+        permitAllFilter.setSecurityMetadataSource(urlFilterInvocationSecurityMetadataSource);
+        permitAllFilter.setAccessDecisionManager(affirmativeBased());
+        permitAllFilter.setAuthenticationManager(authenticationManagerBean());
 
-        return filterSecurityInterceptor;
+        return permitAllFilter;
     }
 
     private AccessDecisionManager affirmativeBased() {

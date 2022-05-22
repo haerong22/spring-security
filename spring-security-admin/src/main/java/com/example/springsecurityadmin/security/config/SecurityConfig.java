@@ -6,6 +6,8 @@ import com.example.springsecurityadmin.security.handler.FormAuthenticationFailur
 import com.example.springsecurityadmin.security.handler.FormAuthenticationSuccessHandler;
 import com.example.springsecurityadmin.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
 import com.example.springsecurityadmin.security.provider.FormAuthenticationProvider;
+import com.example.springsecurityadmin.security.voter.IpAddressVoter;
+import com.example.springsecurityadmin.service.SecurityResourceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -46,6 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final FormAuthenticationSuccessHandler formAuthenticationSuccessHandler;
     private final FormAuthenticationFailureHandler formAuthenticationFailureHandler;
     private final UrlFilterInvocationSecurityMetadataSource urlFilterInvocationSecurityMetadataSource;
+    private final SecurityResourceService securityResourceService;
 
     private final String[] permitAllResources = {"/", "/users", "user/login/**", "/login*"};
 
@@ -124,9 +127,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private List<AccessDecisionVoter<?>> getAccessDecisionVoters() {
 
         List<AccessDecisionVoter<?>> accessDecisionVoters = new ArrayList<>();
+        accessDecisionVoters.add(ipAddressVoter());
         accessDecisionVoters.add(roleVoter());
 
         return accessDecisionVoters;
+    }
+
+    @Bean
+    public IpAddressVoter ipAddressVoter() {
+        return new IpAddressVoter(securityResourceService);
     }
 
     @Bean

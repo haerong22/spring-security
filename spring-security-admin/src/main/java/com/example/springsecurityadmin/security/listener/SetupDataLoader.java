@@ -1,13 +1,7 @@
 package com.example.springsecurityadmin.security.listener;
 
-import com.example.springsecurityadmin.domain.entity.Account;
-import com.example.springsecurityadmin.domain.entity.Resources;
-import com.example.springsecurityadmin.domain.entity.Role;
-import com.example.springsecurityadmin.domain.entity.RoleHierarchy;
-import com.example.springsecurityadmin.repository.ResourcesRepository;
-import com.example.springsecurityadmin.repository.RoleHierarchyRepository;
-import com.example.springsecurityadmin.repository.RoleRepository;
-import com.example.springsecurityadmin.repository.UserRepository;
+import com.example.springsecurityadmin.domain.entity.*;
+import com.example.springsecurityadmin.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -29,6 +23,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private final ResourcesRepository resourcesRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleHierarchyRepository roleHierarchyRepository;
+    private final AccessIpRepository accessIpRepository;
 
     @Override
     @Transactional
@@ -39,6 +34,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         }
 
         setupSecurityResources();
+        setupAccessIpData();
 
         alreadySetup = true;
     }
@@ -135,5 +131,23 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
         RoleHierarchy childRoleHierarchy = roleHierarchyRepository.save(roleHierarchy);
         childRoleHierarchy.setParentName(parentRoleHierarchy);
+    }
+
+    private void setupAccessIpData() {
+        AccessIp byIpAddress = accessIpRepository.findByIpAddress("127.0.0.1");
+        if (byIpAddress == null) {
+            AccessIp accessIp = AccessIp.builder()
+                    .ipAddress("127.0.0.1")
+                    .build();
+
+            accessIpRepository.save(accessIp);
+
+            accessIp = AccessIp.builder()
+                    .ipAddress("0:0:0:0:0:0:0:1")
+                    .build();
+
+            accessIpRepository.save(accessIp);
+        }
+
     }
 }

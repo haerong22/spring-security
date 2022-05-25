@@ -12,4 +12,6 @@ public interface UserService {
     void createUser(Account account);
 
     void modifyUser(AccountDto accountDto);
+
+    void order();
 }

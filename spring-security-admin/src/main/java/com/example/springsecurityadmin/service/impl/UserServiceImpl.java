@@ -8,6 +8,7 @@ import com.example.springsecurityadmin.repository.UserRepository;
 import com.example.springsecurityadmin.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,5 +79,11 @@ public class UserServiceImpl implements UserService {
         account.setPassword(passwordEncoder.encode(accountDto.getPassword()));
         userRepository.save(account);
 
+    }
+
+    @Override
+    @Secured("ROLE_USER")
+    public void order() {
+        System.out.println("order");
     }
 }

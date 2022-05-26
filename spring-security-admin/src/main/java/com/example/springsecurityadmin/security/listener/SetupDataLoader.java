@@ -64,7 +64,8 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createResourceIfNotFound("/mypage", "", user, "url", 2);
         createResourceIfNotFound("/messages", "", manager, "url", 3);
         createResourceIfNotFound("/config", "", manager, "url", 4);
-
+        createResourceIfNotFound("com.example.springsecurityadmin.aopsecurity.AopMethodService.methodSecured", "", manager, "method", 5);
+        createResourceIfNotFound("execution(* com.example.springsecurityadmin.aopsecurity.AopPointcutService.pointcut*(..))", "", manager, "pointcut", 6);
     }
 
     @Transactional

@@ -1,5 +1,6 @@
 package com.example.springsecurityadmin.security.config;
 
+import com.example.springsecurityadmin.security.aop.CustomMethodSecurityInterceptor;
 import com.example.springsecurityadmin.security.factory.MethodResourcesFactoryBean;
 import com.example.springsecurityadmin.security.factory.PointcutResourcesFactoryBean;
 import com.example.springsecurityadmin.security.proccessor.ProtectPointcutPostProcessor;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.intercept.RunAsManager;
 import org.springframework.security.access.method.MapBasedMethodSecurityMetadataSource;
 import org.springframework.security.access.method.MethodSecurityMetadataSource;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -41,6 +43,20 @@ public class MethodSecurityConfig extends GlobalMethodSecurityConfiguration {
 
         protectPointcutPostProcessor.setPointcutMap(pointcutResourcesFactoryBean.getObject());
         return protectPointcutPostProcessor;
+    }
+
+    @Bean
+    public CustomMethodSecurityInterceptor customMethodSecurityInterceptor(MapBasedMethodSecurityMetadataSource methodSecurityMetadataSource) {
+        CustomMethodSecurityInterceptor customMethodSecurityInterceptor = new CustomMethodSecurityInterceptor();
+        customMethodSecurityInterceptor.setAccessDecisionManager(accessDecisionManager());
+        customMethodSecurityInterceptor.setAfterInvocationManager(afterInvocationManager());
+        customMethodSecurityInterceptor.setSecurityMetadataSource(methodSecurityMetadataSource);
+        RunAsManager runAsManager = runAsManager();
+        if (runAsManager != null) {
+            customMethodSecurityInterceptor.setRunAsManager(runAsManager);
+        }
+
+        return customMethodSecurityInterceptor;
     }
 
 //    @Bean

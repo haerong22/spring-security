@@ -5,6 +5,7 @@ import com.example.springsecurityadmin.domain.entity.Resources;
 import com.example.springsecurityadmin.domain.entity.Role;
 import com.example.springsecurityadmin.repository.RoleRepository;
 import com.example.springsecurityadmin.security.metadatasource.UrlFilterInvocationSecurityMetadataSource;
+import com.example.springsecurityadmin.service.MethodSecurityService;
 import com.example.springsecurityadmin.service.ResourcesService;
 import com.example.springsecurityadmin.service.RoleService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class ResourcesController {
     private final RoleService roleService;
     private final RoleRepository roleRepository;
     private final UrlFilterInvocationSecurityMetadataSource filterInvocationSecurityMetadataSource;
+    private final MethodSecurityService methodSecurityService;
 
     @GetMapping(value="/admin/resources")
     public String getResources(Model model) throws Exception {
@@ -77,7 +79,13 @@ public class ResourcesController {
         resources.setRoleSet(roles);
 
         resourcesService.createResources(resources);
-        filterInvocationSecurityMetadataSource.reload();
+
+        if ("url".equals(resourcesDto.getResourceType())) {
+            filterInvocationSecurityMetadataSource.reload();
+        } else {
+            methodSecurityService.addMethodSecured(resourcesDto.getResourceName(),resourcesDto.getRoleName());
+        }
+
 
         return "redirect:/admin/resources";
     }
